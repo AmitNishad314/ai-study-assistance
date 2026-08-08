@@ -1,0 +1,7 @@
+
+
+source venv/bin/activate
+python -m pip install pydantic-settings
+python -m pip install langchain
+python -m pip install langchain-google-genai
+python -m pip install langchain-core
