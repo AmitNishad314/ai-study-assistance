@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ai study assistance</title>
+    <link rel="stylesheet" href="/static/style.css">
+
+</head>
+<body>
+   <div class="app">
+    <header>
+
+        <div>
+            <h1>AI Study Assistant</h1>
+            <p>Ask questions. Understand concepts.</p>
+        </div>
+
+        <button id="new-chat-button">
+            New Chat
+        </button>
+
+    </header>
+
+    <main id="chat-container">
+
+        <div class="message assistant-message">
+
+            <div class="avatar">
+                AI
+            </div>
+
+            <div class="message-content">
+                Hi! What would you like to study today?
+            </div>
+
+        </div>
+
+    </main>
+    <div>
+        <input
+            type="file"
+            id="pdf-input"
+            accept=".pdf"
+        />
+        
+        <button id="upload-button">
+            Upload PDF
+        </button>
+    </div>
+
+    <div class="input-area">
+
+        <textarea
+            id="message-input"
+            placeholder="Ask anything..."
+            rows="1"
+        ></textarea>
+
+        <button id="send-button">
+            Send
+        </button>
+
+    </div>
+   </div>
+    
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

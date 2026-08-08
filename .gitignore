@@ -1,0 +1,12 @@
+myenv/
+venv/
+
+__pycache__/
+*.pyc
+
+.env
+
+storage/chroma_db/
+
+storage/uploads/*
+!storage/uploads/.gitkeep
