@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function ChatInput({ onSend }) {
+export default function ChatInput({ onSend ,disabled }) {
 
     const [question, setQuestion] = useState("");
 
@@ -16,33 +16,37 @@ export default function ChatInput({ onSend }) {
 
     return (
 
-        <div className="flex gap-2">
-
+        <div className="flex gap-3 border-t pt-4">
+    
             <input
                 value={question}
                 onChange={(e)=>setQuestion(e.target.value)}
+                disabled={disabled}
                 onKeyDown={(e)=>{
-
+    
                     if(e.key==="Enter"){
-
+    
                         send();
-
+    
                     }
-
+    
                 }}
-                className="flex-1 border rounded-lg p-3"
-                placeholder="Ask something..."
+                placeholder="Ask anything about your documents..."
+                className="flex-1 rounded-xl border px-5 py-3 outline-none focus:ring-2 focus:ring-blue-500"
             />
-
+    
             <button
                 onClick={send}
-                className="bg-blue-600 text-white px-6 rounded-lg"
+                disabled={disabled}
+                className="rounded-xl bg-blue-600 px-6 text-white hover:bg-blue-700"
             >
-                Send
+    
+                {disabled ? "Thinking..." : "Send"}
+    
             </button>
-
+    
         </div>
-
+    
     );
 
 }

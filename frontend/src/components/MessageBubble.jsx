@@ -4,7 +4,9 @@ export default function MessageBubble({
 
     role,
 
-    content
+    content,
+
+    sources=[]
 
 }){
 
@@ -21,10 +23,10 @@ export default function MessageBubble({
         >
 
             <div
-                className={`max-w-3xl rounded-xl p-4 ${
+                className={`max-w-3xl w-fit rounded-xl p-4 ${
                     user
                     ? "bg-blue-600 text-white"
-                    : "bg-white border"
+                    : "bg-white border border-gray-200 shadow-md"
                 }`}
             >
 
@@ -33,6 +35,53 @@ export default function MessageBubble({
                     {content}
 
                 </ReactMarkdown>
+
+                {
+
+                    !user &&
+
+                    sources.length>0 &&(
+
+                        <>
+
+                            <hr className="my-4"/>
+
+                            <h4 className="font-semibold text-sm">
+
+                                Sources
+
+                            </h4>
+
+                            <div className="mt-2 space-y-2">
+
+                                {
+
+                                    sources.map((source,index)=>(
+
+                                        <div
+                                            key={index}
+                                            className="text-sm text-gray-600 bg-gray-100 rounded p-2"
+                                        >
+
+                                            📄 {source.filename}
+
+                                            {" "}
+
+                                            Page {source.page}
+
+                                        </div>
+
+                                    ))
+
+                                }
+
+                            </div>
+
+                        </>
+
+                    )
+
+                }
 
             </div>
 

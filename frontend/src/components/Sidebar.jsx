@@ -95,7 +95,7 @@ export default function Sidebar() {
 
     return (
 
-        <aside className="w-72 bg-slate-900 text-white p-5">
+        <aside className="w-72 bg-slate-900 text-white p-5 flex flex-col">
 
             <h2 className="text-xl font-bold mb-6">
 
@@ -120,7 +120,7 @@ export default function Sidebar() {
                 />
             }
 
-            <div className="mt-6 space-y-3">
+            <div className="mt-6 flex-1 overflow-y-auto space-y-3">
 
                 {
                     documents.length === 0 ?

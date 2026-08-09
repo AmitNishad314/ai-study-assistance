@@ -1,32 +1,36 @@
+import { useEffect, useRef } from "react";
 import MessageBubble from "./MessageBubble";
 
-export default function ChatBox({
+export default function ChatBox({ messages }) {
 
-    messages
+    const bottomRef = useRef(null);
 
-}){
+    useEffect(() => {
 
-    return(
+        bottomRef.current?.scrollIntoView({
+            behavior: "smooth"
+        });
 
-        <div
-            className="flex-1 overflow-y-auto space-y-4"
-        >
+    }, [messages]);
+
+    return (
+
+        <div className="flex-1 overflow-y-auto space-y-5">
 
             {
-                messages.map((msg,index)=>(
+                messages.map((msg, index) => (
 
                     <MessageBubble
-
                         key={index}
-
                         role={msg.role}
-
                         content={msg.content}
-
+                        sources={msg.sources}
                     />
 
                 ))
             }
+
+            <div ref={bottomRef} />
 
         </div>
 

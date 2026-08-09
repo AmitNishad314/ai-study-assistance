@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Toaster } from "react-hot-toast";
+import ChatProvider from "./context/ChatContext";
 
 import "./styles/global.css";
 
@@ -11,9 +12,13 @@ ReactDOM.createRoot(
 ).render(
   <React.StrictMode>
       <>
-    <Toaster position="top-right" />
+    
 
-    <App />
+     <ChatProvider>
+     <Toaster position="top-right" />
+      <App />
+
+     </ChatProvider>
      </>
   </React.StrictMode>
 );

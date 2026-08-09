@@ -1,20 +1,40 @@
-import React from 'react'
+export default function Navbar(){
 
-const Navbar = () => {
-  return (
-    <header
-    className="h-16 border-b bg-white flex items-center px-6"
-    >
+    return(
 
-    <h1 className="text-2xl font-bold">
+        <header className="h-16 border-b bg-white flex items-center justify-between px-6">
 
-        AI Document Assistant
+            <h1 className="text-2xl font-bold">
 
-    </h1>
+                AI Document Assistant
 
-</header>
+            </h1>
 
-  )
+            <span className="text-sm text-gray-500">
+
+                Powered by Gemini
+
+            </span>
+            <button
+
+               onClick={() => {
+            
+                   localStorage.removeItem("chat-history");
+            
+                   window.location.reload();
+            
+               }}
+            
+               className="rounded bg-red-500 px-3 py-2 text-white"
+            
+            >
+            
+               Clear Chat
+            
+             </button>
+
+        </header>
+
+    );
+
 }
-
-export default Navbar
