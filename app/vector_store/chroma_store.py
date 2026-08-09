@@ -1,4 +1,5 @@
 from langchain_chroma import Chroma
+import uuid
 
 
 class ChromaStore:
@@ -11,7 +12,16 @@ class ChromaStore:
         )
 
     def add_documents(self, documents):
-        self.db.add_documents(documents)
+
+       ids = [
+           str(uuid.uuid4())
+           for _ in documents
+       ]
+   
+       self.db.add_documents(
+           documents,
+           ids=ids
+       )
 
     def as_retriever(self):
 
