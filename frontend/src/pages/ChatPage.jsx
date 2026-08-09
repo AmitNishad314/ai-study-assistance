@@ -1,21 +1,77 @@
-import React from 'react'
+import { useState } from "react";
 
-const Chatpage = () => {
-  return (
-    <div
-            className="flex justify-center items-center h-full"
-        >
+import ChatBox from "../components/ChatBox";
+import ChatInput from "../components/ChatInput";
 
-            <h2
-                className="text-3xl text-gray-500"
-            >
+import { askQuestion } from "../services/api";
 
-                Ask anything about your documents
+export default function ChatPage(){
 
-            </h2>
+    const [messages,setMessages]=useState([]);
+
+    async function handleSend(question){
+
+        const userMessage={
+            role:"user",
+            content:question
+        };
+
+        setMessages(prev=>[
+
+            ...prev,
+
+            userMessage
+
+        ]);
+
+        try{
+
+            const response=await askQuestion(question);
+
+            setMessages(prev=>[
+
+                ...prev,
+
+                {
+                    role:"assistant",
+                    content:response.answer
+                }
+
+            ]);
+
+        }
+
+        catch{
+
+            setMessages(prev=>[
+
+                ...prev,
+
+                {
+                    role:"assistant",
+                    content:"Something went wrong."
+                }
+
+            ]);
+
+        }
+
+    }
+
+    return(
+
+        <div className="flex flex-col h-full gap-4">
+
+            <ChatBox
+                messages={messages}
+            />
+
+            <ChatInput
+                onSend={handleSend}
+            />
 
         </div>
-  )
-}
 
-export default Chatpage
+    );
+
+}

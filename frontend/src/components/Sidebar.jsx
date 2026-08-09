@@ -1,8 +1,101 @@
-import React from 'react'
+import { useEffect, useState } from "react";
 
-const SideBar = () => {
-  return (
-    <aside className="w-72 bg-slate-900 text-white p-5">
+import UploadButton from "./UploadButton";
+import DocumentCard from "./DocumentCard";
+
+import {
+
+    uploadPDF,
+
+    getDocuments,
+
+    deleteDocument
+
+} from "../services/api";
+
+import toast from "react-hot-toast";
+
+export default function Sidebar() {
+
+    const [documents, setDocuments] = useState([]);
+    const [uploading,setUploading]=useState(false);
+
+    async function loadDocuments() {
+        try {
+            const docs = await getDocuments();
+    
+            console.log(docs);
+            console.log(Array.isArray(docs));
+    
+            setDocuments(
+                Object.entries(docs).map(([document_id, data]) => ({
+                    document_id,
+                    ...data,
+                }))
+            );
+    
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function handleUpload(file){
+
+        try{
+    
+            setUploading(true);
+    
+            await uploadPDF(file);
+    
+            toast.success("PDF Uploaded");
+    
+            await loadDocuments();
+    
+        }
+    
+        catch(err){
+    
+            toast.error("Upload Failed");
+    
+        }
+    
+        finally{
+    
+            setUploading(false);
+    
+        }
+    
+    }
+
+    async function handleDelete(id){
+
+        try{
+    
+            await deleteDocument(id);
+    
+            toast.success("Document Deleted");
+    
+            loadDocuments();
+    
+        }
+    
+        catch{
+    
+            toast.error("Delete Failed");
+    
+        }
+    
+    }
+
+    useEffect(() => {
+
+        loadDocuments();
+
+    }, []);
+
+    return (
+
+        <aside className="w-72 bg-slate-900 text-white p-5">
 
             <h2 className="text-xl font-bold mb-6">
 
@@ -10,22 +103,51 @@ const SideBar = () => {
 
             </h2>
 
-            <button
-                className="w-full rounded-lg bg-blue-600 py-2 hover:bg-blue-700"
-            >
+            {
+                uploading ?
+            
+                <button
+                    disabled
+                    className="w-full bg-gray-600 py-2 rounded-lg"
+                >
+                    Uploading...
+                </button>
+            
+                :
+            
+                <UploadButton
+                    onUpload={handleUpload}
+                />
+            }
 
-                Upload PDF
+            <div className="mt-6 space-y-3">
 
-            </button>
+                {
+                    documents.length === 0 ?
 
-            <div className="mt-8">
+                    <p>No documents uploaded.</p>
 
-                No documents uploaded
+                    :
+
+                    documents.map((doc)=>(
+
+                        <DocumentCard
+
+                         key={doc.document_id}
+
+                          document={doc}
+
+                           onDelete={handleDelete}
+
+                        />
+
+                    ))
+                }
 
             </div>
 
         </aside>
-  )
-}
 
-export default SideBar
+    );
+
+}

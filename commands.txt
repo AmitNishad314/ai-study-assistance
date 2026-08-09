@@ -9,6 +9,7 @@ python -m pip install langchain-community
 python -m pip install pypdf
 python -m pip install langchain-chroma
 python -m pip install chromadb
+python -m pip install python-multipart
 
 
 inside frontend folder
@@ -20,3 +21,4 @@ npm install react-markdown
 npm install react-hot-toast
 npm install lucide-react
 npm install react-dropzone
+npm install react-hot-toast

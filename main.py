@@ -1,4 +1,5 @@
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 
 if __name__ == "__main__":
     uvicorn.run(

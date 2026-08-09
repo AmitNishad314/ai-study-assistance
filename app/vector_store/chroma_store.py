@@ -59,6 +59,6 @@ class ChromaStore:
         
         result = self.db.get(
             where={
-                "document_id"= document_id 
+                "document_id" :document_id 
                 }
         )

@@ -16,7 +16,7 @@ router = APIRouter()
 embedding = EmbeddingService().get_embedding()
 ingestion_service = IngestionService()
 rag_service = RAGService()
-vector_store = ChromaStore()
+vector_store = ChromaStore(embedding)
 registry = DocumentRegistry()
 
 
@@ -27,10 +27,16 @@ def root():
     }
 
 
-@router.get("/chat")
-def chat(question: str):
+from pydantic import BaseModel
 
-    result = rag_service.ask(question)
+class ChatRequest(BaseModel):
+    question: str
+
+
+@router.post("/chat")
+def chat(request: ChatRequest):
+
+    result = rag_service.ask(request.question)
 
     return result
     
@@ -47,7 +53,7 @@ async def upload_pdf(file: UploadFile = File(...)):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    chunks = ingestion_service.ingest(file_path)
+    chunks = ingestion_service.ingest(file_path,file.filename)
 
     return UploadResponse(
         filename=file.filename,
