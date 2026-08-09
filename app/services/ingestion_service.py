@@ -2,11 +2,15 @@ from app.documents.pdf_loader import PDFLoader
 from app.documents.text_splitter import DocumentSplitter
 from app.embeddings.langchain_embeddings import EmbeddingService
 from app.vector_store.chroma_store import ChromaStore
+from datetime import datetime
+from app.services.document_registry import DocumentRegistry
+
+
 
 
 class IngestionService:
 
-    def ingest(self, pdf_path):
+    def ingest(self, pdf_path,filename):
 
         loader = PDFLoader()
 
@@ -33,5 +37,13 @@ class IngestionService:
         )
 
         vector_store.add_documents(chunks)
+        
+        registry = DocumentRegistry()
+        registry.add_document({
+            "document_id": document_id,
+            "filename": filename,
+            "chunks": len(chunks),
+            "ingested_at": datetime.now().isoformat()
+        })
 
         print(f"Indexed {len(chunks)} chunks successfully.")
