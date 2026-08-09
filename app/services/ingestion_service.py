@@ -17,7 +17,14 @@ class IngestionService:
         docs = loader.load(pdf_path)
 
         chunks = splitter.split(docs)
+        
+        import os
 
+        filename = os.path.basename(pdf_path)
+        
+        for chunk in chunks:
+            chunk.metadata["filename"] = filename
+        
         vector_store = ChromaStore(
             embedding_service.get_embedding()
         )

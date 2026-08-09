@@ -22,16 +22,46 @@ class RAGService:
 
         docs = retriever.invoke(question)
 
-        context = "\n\n".join(
-            doc.page_content
-            for doc in docs
+        context = ""
+
+        sources = []
+
+        for doc in docs:
+    
+          filename = doc.metadata.get(
+            "filename",
+            "Unknown"
         )
-
+    
+          page = doc.metadata.get(
+            "page",
+            0
+        ) + 1
+    
+          context += f"""
+        Document: {filename}
+        Page: {page}
+        
+        {doc.page_content}
+        
+        ---------------------
+        """
+        
+        sources.append({
+                "filename": filename,
+                "page": page
+            })
+    
         chain = rag_prompt | llm | self.parser
-
-        return chain.invoke(
+    
+        answer = chain.invoke(
             {
                 "context": context,
                 "question": question
             }
         )
+        
+        return {
+            "answer": answer,
+            "sources": sources
+        }

@@ -24,11 +24,9 @@ def root():
 @router.get("/chat")
 def chat(question: str):
 
-    answer = rag_service.ask(question)
+    result = rag_service.ask(question)
 
-    return {
-        "answer": answer
-    }
+    return result
     
 @router.post("/upload", response_model=UploadResponse)
 async def upload_pdf(file: UploadFile = File(...)):

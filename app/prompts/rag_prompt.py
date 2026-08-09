@@ -2,21 +2,18 @@ from langchain_core.prompts import ChatPromptTemplate
 
 rag_prompt = ChatPromptTemplate.from_template(
 """
-You are an AI assistant.
+You are an AI document assistant.
 
-Answer ONLY from the provided context.
+Rules:
 
-If the answer is not present in the context,
-say:
+1. Answer ONLY from the context.
+2. If the answer is missing, clearly say you don't know.
+3. Never make up information.
+4. Keep answers concise but complete.
 
-"I couldn't find the answer in the uploaded document."
-
-------------------------
 Context:
 
 {context}
-
-------------------------
 
 Question:
 
