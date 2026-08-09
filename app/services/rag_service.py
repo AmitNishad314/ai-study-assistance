@@ -4,6 +4,7 @@ from app.embeddings.langchain_embeddings import EmbeddingService
 from app.llm.langchain_llm import llm
 from app.prompts.rag_prompt import rag_prompt
 from app.vector_store.chroma_store import ChromaStore
+from app.core.exceptions import APIException
 
 
 class RAGService:
@@ -54,12 +55,22 @@ class RAGService:
     
         chain = rag_prompt | llm | self.parser
     
-        answer = chain.invoke(
-            {
-                "context": context,
-                "question": question
-            }
-        )
+        try:
+        
+           answer = chain.invoke(
+        
+               {
+                   "context": context,
+                   "question": question
+               }
+        
+           )
+        
+        except Exception:
+        
+           raise APIException(
+               "Failed to generate response."
+           )
         
         return {
             "answer": answer,

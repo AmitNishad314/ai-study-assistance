@@ -58,39 +58,39 @@ export default function ChatPage(){
             
             ]);
             
-            // await streamText(
+            await streamText(
             
-            //     response.answer,
+                response.answer,
             
-            //     (partialText) => {
+                (partialText) => {
             
-            //         setMessages(prev => {
+                    setMessages(prev => {
             
-            //             const updated = [...prev];
+                        const updated = [...prev];
             
-            //             updated[updated.length - 1] = {
+                        updated[updated.length - 1] = {
             
-            //                 ...updated[updated.length - 1],
+                            ...updated[updated.length - 1],
             
-            //                 content: partialText
+                            content: partialText
             
-            //             };
+                        };
             
-            //             return updated;
+                        return updated;
             
-            //         });
+                    });
             
-            //     }
-            
-            // );
-            setMessages(prev => [
-                ...prev,
-                {
-                    role: "assistant",
-                    content: response.answer,
-                    sources: response.sources
                 }
-            ]);
+            
+            );
+            // setMessages(prev => [
+            //     ...prev,
+            //     {
+            //         role: "assistant",
+            //         content: response.answer,
+            //         sources: response.sources
+            //     }
+            // ]);
             setLoading(false);
 
         }
