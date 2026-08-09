@@ -7,11 +7,14 @@ from app.schemas.upload_response import UploadResponse
 from app.services.ingestion_service import IngestionService
 
 from app.services.rag_service import RAGService
+from app.vector_store.chroma_store import ChromaStore
+from app.embeddings.langchain_embeddings import EmbeddingService
 
 router = APIRouter()
+embedding = EmbeddingService().get_embedding()
 ingestion_service = IngestionService()
-
 rag_service = RAGService()
+vector_store = ChromaStore()
 
 
 @router.get("/")
@@ -48,3 +51,15 @@ async def upload_pdf(file: UploadFile = File(...)):
         chunks=chunks,
         message="PDF indexed successfully."
     )
+    
+@router.get("/documents")
+def documents():
+    return vector_store.list_documents()
+
+
+@router.delete("/documents/{document_id}")
+def delete_document(document_id: str):
+    vector_store.delete_document(document_id)
+    return {
+        "message": f"Document with ID {document_id} deleted successfully."
+    }

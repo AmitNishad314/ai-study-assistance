@@ -20,9 +20,12 @@ class IngestionService:
         
         import os
 
-        filename = os.path.basename(pdf_path)
+        from app.utils.document_id import generate_document_id
+
+        document_id = generate_document_id(filename)
         
         for chunk in chunks:
+            chunk.metadata["document_id"] = document_id
             chunk.metadata["filename"] = filename
         
         vector_store = ChromaStore(
