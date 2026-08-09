@@ -47,3 +47,5 @@ class IngestionService:
         })
 
         print(f"Indexed {len(chunks)} chunks successfully.")
+        
+        return len(chunks)

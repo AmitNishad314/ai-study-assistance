@@ -1,8 +1,18 @@
 import logging
+import sys
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(message)s",
-)
 
-logger = logging.getLogger(__name__)
+def setup_logger():
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)s | %(message)s",
+        handlers=[
+            logging.StreamHandler(sys.stdout)
+        ]
+    )
+
+    return logging.getLogger("ai-document-assistant")
+
+
+logger = setup_logger()

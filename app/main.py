@@ -7,11 +7,13 @@ from app.core.exceptions import (
     APIException,
     api_exception_handler
 )
+from app.core.logging import logger
 
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.VERSION,
 )
+logger.info("Application started.")
 app.add_exception_handler(
     APIException,
     api_exception_handler

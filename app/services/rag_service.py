@@ -5,6 +5,7 @@ from app.llm.langchain_llm import llm
 from app.prompts.rag_prompt import rag_prompt
 from app.vector_store.chroma_store import ChromaStore
 from app.core.exceptions import APIException
+from app.core.logging import logger
 
 
 class RAGService:
@@ -18,8 +19,10 @@ class RAGService:
         self.parser = StrOutputParser()
 
     def ask(self, question):
+        logger.info(f"Question: {question}")
 
         retriever = self.vector_store.as_retriever()
+        logger.info(f"Retrieved {len(docs)} chunks")
 
         docs = retriever.invoke(question)
 
@@ -71,7 +74,7 @@ class RAGService:
            raise APIException(
                "Failed to generate response."
            )
-        
+        logger.info("Answer generated successfully.")
         return {
             "answer": answer,
             "sources": sources

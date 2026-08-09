@@ -10,6 +10,7 @@ from app.services.rag_service import RAGService
 from app.vector_store.chroma_store import ChromaStore
 from app.embeddings.langchain_embeddings import EmbeddingService
 from app.services.document_registry import DocumentRegistry
+from app.core.logging import logger
 
 
 router = APIRouter()
@@ -52,8 +53,10 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
+        logger.info(f"Uploading file: {file.filename}")
 
     chunks = ingestion_service.ingest(file_path,file.filename)
+    logger.info(f"Indexed {chunks} chunks from {file.filename}")
 
     return UploadResponse(
         filename=file.filename,
