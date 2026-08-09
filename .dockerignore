@@ -1,0 +1,15 @@
+venv/
+__pycache__/
+*.pyc
+.git/
+.gitignore
+.env
+.env.example
+
+storage/chroma_db/
+storage/uploads/
+
+tests/
+
+.vscode/
+.idea/

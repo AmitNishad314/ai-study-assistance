@@ -25,6 +25,11 @@ class RAGService:
         
 
         docs = retriever.invoke(question)
+        if not docs:
+          return {
+        "answer": "I couldn't find any relevant information in the uploaded documents.",
+        "sources": []
+         }
         logger.info(f"Retrieved {len(docs)} chunks")
 
         context = ""

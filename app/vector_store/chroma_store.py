@@ -7,7 +7,7 @@ class ChromaStore:
     def __init__(self, embedding_function):
 
         self.db = Chroma(
-            persist_directory="settings.CHROMA_DIR",
+            persist_directory=settings.CHROMA_DIR,
             embedding_function=embedding_function,
         )
 
