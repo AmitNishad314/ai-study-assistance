@@ -1,12 +1,56 @@
-myenv/
-venv/
-
-__pycache__/
-*.pyc
-
+# ==========================
+# Environment
+# ==========================
 .env
+.env.example
+.env.local
+.env.*
 
-storage/chroma_db/
+# Keep only the template
+!.env.example
 
+# ==========================
+# Python
+# ==========================
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# ==========================
+# VS Code / IDE
+# ==========================
+.vscode/
+.idea/
+
+# ==========================
+# OS Files
+# ==========================
+.DS_Store
+Thumbs.db
+
+# ==========================
+# Uploads
+# ==========================
 storage/uploads/*
 !storage/uploads/.gitkeep
+
+# ==========================
+# Chroma DB
+# ==========================
+storage/chroma_db/*
+!storage/chroma_db/.gitkeep
+
+# ==========================
+# Generated Registry
+# ==========================
+storage/document_registry.json
+
+# ==========================
+# Logs
+# ==========================
+*.log

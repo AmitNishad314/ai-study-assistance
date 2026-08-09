@@ -91,7 +91,7 @@ async function uploadPDF() {
     );
 
     const response = await fetch(
-        "/api/storage/uploads",
+        "/api/settings.UPLOAD_DIR",
         {
             method: "POST",
 

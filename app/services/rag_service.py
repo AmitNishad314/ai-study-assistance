@@ -22,9 +22,10 @@ class RAGService:
         logger.info(f"Question: {question}")
 
         retriever = self.vector_store.as_retriever()
-        logger.info(f"Retrieved {len(docs)} chunks")
+        
 
         docs = retriever.invoke(question)
+        logger.info(f"Retrieved {len(docs)} chunks")
 
         context = ""
 
@@ -69,11 +70,10 @@ class RAGService:
         
            )
         
-        except Exception:
+        except Exception as e:
         
-           raise APIException(
-               "Failed to generate response."
-           )
+           logger.exception(e)
+           raise
         logger.info("Answer generated successfully.")
         return {
             "answer": answer,

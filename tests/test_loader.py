@@ -3,7 +3,7 @@ from app.documents.pdf_loader import PDFLoader
 loader = PDFLoader()
 
 docs = loader.load(
-    "storage/uploads/AI_ML_chart.pdf"
+    "settings.UPLOAD_DIR/AI_ML_chart.pdf"
 )
 
 print(len(docs))

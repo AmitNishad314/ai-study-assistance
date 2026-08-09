@@ -1,16 +1,21 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings
+
 
 class Settings(BaseSettings):
-    APP_NAME: str = "AI Document Assistant"
-    VERSION: str = "2.0.0"
-    API_PREFIX: str = "/api"
 
-    GOOGLE_API_KEY: str
+    APP_NAME: str = "AI Document Assistant"
+    VERSION: str = "1.0.0"
+
+    GEMINI_API_KEY: str
+
     MODEL_NAME: str = "gemini-flash-latest"
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        extra="ignore",
-    )
+    UPLOAD_DIR: str = "storage/uploads"
+    CHROMA_DIR: str = "storage/chroma_db"
+
+    class Config:
+        env_file = ".env"
+
 
 settings = Settings()
+print("MODEL =", settings.MODEL_NAME)

@@ -44,10 +44,10 @@ def chat(request: ChatRequest):
 @router.post("/upload", response_model=UploadResponse)
 async def upload_pdf(file: UploadFile = File(...)):
 
-    os.makedirs("storage/uploads", exist_ok=True)
+    os.makedirs("settings.UPLOAD_DIR", exist_ok=True)
 
     file_path = os.path.join(
-        "storage/uploads",
+        "settings.UPLOAD_DIR",
         file.filename
     )
 
