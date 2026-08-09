@@ -1,5 +1,6 @@
 from langchain_chroma import Chroma
 import uuid
+from app.core.config import settings
 
 
 class ChromaStore:
