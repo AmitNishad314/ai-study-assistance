@@ -14,4 +14,9 @@ class ChromaStore:
         self.db.add_documents(documents)
 
     def as_retriever(self):
-        return self.db.as_retriever()
+
+     return self.db.as_retriever(
+        search_kwargs={
+            "k": 4
+        }
+    )

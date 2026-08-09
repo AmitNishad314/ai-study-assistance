@@ -1,21 +1,23 @@
 from fastapi import APIRouter
 
-from app.services.chat_service import ChatService
+from app.services.rag_service import RAGService
 
 router = APIRouter()
 
-service = ChatService()
+rag_service = RAGService()
 
 
 @router.get("/")
 def root():
-    return {"message": "AI Document Assistant"}
+    return {
+        "message": "AI Document Assistant"
+    }
 
 
 @router.get("/chat")
 def chat(question: str):
 
-    answer = service.ask(question)
+    answer = rag_service.ask(question)
 
     return {
         "answer": answer
