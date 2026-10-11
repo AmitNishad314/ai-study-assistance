@@ -1,7 +1,7 @@
 import tempfile
 from pathlib import Path
 
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, File, HTTPException, UploadFile
 from pydantic import BaseModel
 
 from app.schemas.upload_response import UploadResponse
@@ -85,10 +85,18 @@ def documents():
 
 @router.delete("/documents/{document_id}")
 def delete_document(document_id: str):
-    vector_store.delete_document(document_id)
-    supabase_storage.delete_pdf(
-        supabase_storage.document_path(document_id)
-    )
+    try:
+        vector_store.delete_document(document_id)
+        supabase_storage.delete_pdf(
+            supabase_storage.document_path(document_id)
+        )
+    except Exception as exc:
+        logger.exception("Failed to delete document %s", document_id)
+        raise HTTPException(
+            status_code=502,
+            detail="Document deletion failed in a storage service. Check backend logs and retry.",
+        ) from exc
+
     return {
         "message": f"Document with ID {document_id} deleted successfully."
     }

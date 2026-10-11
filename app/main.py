@@ -9,19 +9,21 @@ from app.core.exceptions import (
 )
 from app.core.logging import logger
 
-app = FastAPI(
+fastapi_app = FastAPI(
     title=settings.APP_NAME,
     version=settings.VERSION,
 )
 logger.info("Application started.")
-app.add_exception_handler(
+fastapi_app.add_exception_handler(
     APIException,
     api_exception_handler
 )
 
-# Enable CORS for React frontend
-app.add_middleware(
-    CORSMiddleware,
+fastapi_app.include_router(router)
+
+# Wrap the whole application so CORS headers are also present on error responses.
+app = CORSMiddleware(
+    app=fastapi_app,
     allow_origins=[
         "http://localhost:5173",
         "https://ai-study-assistance-gules.vercel.app",
@@ -31,5 +33,3 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-app.include_router(router)

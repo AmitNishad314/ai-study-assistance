@@ -79,9 +79,11 @@ export default function Sidebar() {
     
         }
     
-        catch{
+        catch(err){
     
-            toast.error("Delete Failed");
+            toast.error(
+                err.response?.data?.detail || "Delete Failed"
+            );
     
         }
     

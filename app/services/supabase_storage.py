@@ -38,7 +38,8 @@ class SupabaseStorage:
 
     def delete_pdf(self, path: str) -> None:
         bucket = quote(SUPABASE_BUCKET, safe="")
-        response = httpx.delete(
+        response = httpx.request(
+            "DELETE",
             f"{self.base_url}/storage/v1/object/{bucket}",
             headers=self.headers,
             json={"prefixes": [path]},
