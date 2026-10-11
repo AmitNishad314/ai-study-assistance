@@ -26,6 +26,7 @@ app.add_middleware(
         "http://localhost:5173",
         "https://ai-study-assistance-gules.vercel.app",
     ],
+    allow_origin_regex=r"https://ai-study-assistance-[a-z0-9-]+-amit-8cbc\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
