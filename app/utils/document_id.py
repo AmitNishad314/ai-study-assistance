@@ -1,8 +1,5 @@
-import hashlib
+import uuid
 
 
-def generate_document_id(filename: str):
-
-    return hashlib.md5(
-        filename.encode()
-    ).hexdigest()
+def generate_document_id():
+    return uuid.uuid4().hex

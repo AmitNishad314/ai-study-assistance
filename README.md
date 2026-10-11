@@ -212,11 +212,17 @@ Create a `.env`
 
 ```env
 GEMINI_API_KEY=YOUR_API_KEY
-MODEL_NAME=gemini-2.5-flash
+MODEL_NAME=gemini-flash-latest
 
-UPLOAD_DIR=storage/uploads
-CHROMA_DIR=storage/chroma_db
+CHROMA_API_KEY=YOUR_CHROMA_CLOUD_API_KEY
+CHROMA_TENANT=YOUR_CHROMA_TENANT_ID
+CHROMA_DATABASE=MentorAI
+
+SUPABASE_SERVICE_ROLE_KEY=YOUR_SUPABASE_SERVICE_ROLE_KEY
+SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 ```
+
+The backend stores PDF originals in the private `MentorAI bucket` Supabase Storage bucket and document chunks in the `mentorai_documents` Chroma Cloud collection. Keep these credentials in environment variables; do not commit real values to `.env` or share them in chat.
 
 ---
 

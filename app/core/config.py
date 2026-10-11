@@ -10,6 +10,13 @@ class Settings(BaseSettings):
 
     MODEL_NAME: str = "gemini-flash-latest"
 
+    CHROMA_API_KEY: str
+    CHROMA_TENANT: str
+    CHROMA_DATABASE: str
+
+    SUPABASE_SERVICE_ROLE_KEY: str
+    SUPABASE_URL: str
+
     UPLOAD_DIR: str = "storage/uploads"
     CHROMA_DIR: str = "storage/chroma_db"
 

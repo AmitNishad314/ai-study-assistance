@@ -1,51 +1,37 @@
+from datetime import datetime, timezone
+
 from app.documents.pdf_loader import PDFLoader
 from app.documents.text_splitter import DocumentSplitter
 from app.embeddings.langchain_embeddings import EmbeddingService
 from app.vector_store.chroma_store import ChromaStore
-from datetime import datetime
-from app.services.document_registry import DocumentRegistry
-
-
+from app.core.logging import logger
 
 
 class IngestionService:
 
-    def ingest(self, pdf_path,filename):
-
+    def ingest(self, pdf_path, filename, document_id, storage_path):
         loader = PDFLoader()
-
         splitter = DocumentSplitter()
-
         embedding_service = EmbeddingService()
 
         docs = loader.load(pdf_path)
-
         chunks = splitter.split(docs)
-        
-        import os
 
-        from app.utils.document_id import generate_document_id
-
-        document_id = generate_document_id(filename)
-        
+        ingested_at = datetime.now(timezone.utc).isoformat()
         for chunk in chunks:
-            chunk.metadata["document_id"] = document_id
-            chunk.metadata["filename"] = filename
-        
+            page = chunk.metadata.get("page")
+            chunk.metadata = {
+                "page": page if isinstance(page, int) else 0,
+                "document_id": document_id,
+                "filename": filename,
+                "storage_path": storage_path,
+                "ingested_at": ingested_at,
+            }
+
         vector_store = ChromaStore(
             embedding_service.get_embedding()
         )
-
         vector_store.add_documents(chunks)
-        
-        registry = DocumentRegistry()
-        registry.add_document({
-            "document_id": document_id,
-            "filename": filename,
-            "chunks": len(chunks),
-            "ingested_at": datetime.now().isoformat()
-        })
 
-        print(f"Indexed {len(chunks)} chunks successfully.")
-        
+        logger.info(f"Indexed {len(chunks)} chunks successfully.")
         return len(chunks)

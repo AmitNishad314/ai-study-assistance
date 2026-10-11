@@ -1,24 +1,24 @@
-from fastapi import APIRouter
-from fastapi import UploadFile, File
-import shutil
-import os
+import tempfile
+from pathlib import Path
+
+from fastapi import APIRouter, File, UploadFile
+from pydantic import BaseModel
 
 from app.schemas.upload_response import UploadResponse
 from app.services.ingestion_service import IngestionService
-
 from app.services.rag_service import RAGService
 from app.vector_store.chroma_store import ChromaStore
 from app.embeddings.langchain_embeddings import EmbeddingService
-from app.services.document_registry import DocumentRegistry
+from app.services.supabase_storage import SupabaseStorage
+from app.utils.document_id import generate_document_id
 from app.core.logging import logger
-
 
 router = APIRouter()
 embedding = EmbeddingService().get_embedding()
 ingestion_service = IngestionService()
 rag_service = RAGService()
 vector_store = ChromaStore(embedding)
-registry = DocumentRegistry()
+supabase_storage = SupabaseStorage()
 
 
 @router.get("/")
@@ -28,51 +28,67 @@ def root():
     }
 
 
-from pydantic import BaseModel
-
 class ChatRequest(BaseModel):
     question: str
 
 
 @router.post("/chat")
 def chat(request: ChatRequest):
-
     result = rag_service.ask(request.question)
-
     return result
-    
+
+
 @router.post("/upload", response_model=UploadResponse)
 async def upload_pdf(file: UploadFile = File(...)):
+    filename = Path(file.filename or "uploaded.pdf").name
+    document_id = generate_document_id()
+    storage_path = supabase_storage.document_path(document_id)
 
-    os.makedirs("settings.UPLOAD_DIR", exist_ok=True)
+    with tempfile.TemporaryDirectory() as temp_dir:
+        file_path = Path(temp_dir) / "upload.pdf"
+        content = await file.read()
+        file_path.write_bytes(content)
 
-    file_path = os.path.join(
-        "settings.UPLOAD_DIR",
-        file.filename
-    )
+        try:
+            supabase_storage.upload_pdf(storage_path, content)
+            logger.info(f"Uploaded original PDF: {filename}")
+            chunks = ingestion_service.ingest(
+                str(file_path),
+                filename,
+                document_id,
+                storage_path,
+            )
+        except Exception:
+            try:
+                vector_store.delete_document(document_id)
+            except Exception:
+                logger.exception("Failed to roll back indexed document")
+            try:
+                supabase_storage.delete_pdf(storage_path)
+            except Exception:
+                logger.exception("Failed to remove uploaded PDF after ingestion failure")
+            raise
 
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-        logger.info(f"Uploading file: {file.filename}")
-
-    chunks = ingestion_service.ingest(file_path,file.filename)
-    logger.info(f"Indexed {chunks} chunks from {file.filename}")
+    logger.info(f"Indexed {chunks} chunks from {filename}")
 
     return UploadResponse(
-        filename=file.filename,
+        filename=filename,
         chunks=chunks,
         message="PDF indexed successfully."
     )
-    
+
+
 @router.get("/documents")
 def documents():
-    return registry.list_documents()
+    return vector_store.list_documents()
 
 
 @router.delete("/documents/{document_id}")
 def delete_document(document_id: str):
     vector_store.delete_document(document_id)
-    registry.delete_document(document_id)
+    supabase_storage.delete_pdf(
+        supabase_storage.document_path(document_id)
+    )
     return {
         "message": f"Document with ID {document_id} deleted successfully."
     }
